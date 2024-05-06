@@ -42,7 +42,7 @@
       return class extend React.Component {
         render () {
           const newProps = {
-            name : 'dingkaile'
+            name : 'dingkaile' 
           }
           return <WrappedComponent {...this.props, ...newProps}/>
         }
