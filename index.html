@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flex布局</title>
+  <style>
+    .container {
+      display: flex;
+      align-items: center; /* 垂直居中对齐 */
+      height: 100px;
+      border: 1px solid black;
+      padding: 0 10px; /* 添加一些内边距 */
+    }
+    .box {
+      border: 1px solid black;
+      padding: 10px; /* 添加内边距 */
+    }
+    .left, .right {
+      width: 50px; /* 左右两侧盒子固定宽度 */
+    }
+    .flexible {
+      flex: 1; /* 中间盒子占据剩余空间 */
+    }
+    .flexible h1 {
+      /* white-space: nowrap; 不换行 */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box left">固定</div>
+    <div class="box flexible"><h1>变多的内容变多的内容变多的内容变多的内容</h1></div>
+    <div class="box right">固定</div>
+  </div>
+</body>
+</html>
