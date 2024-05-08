@@ -1,2 +1,2 @@
-# DingkaileNOte
+# DingkaileNote
 My learning note
