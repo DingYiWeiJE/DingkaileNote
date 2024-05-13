@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code Rain</title>
+<style>
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<script>
+  const cvs = document.getElementById('bg')
+  const width =window.innerWidth 
+  const height =window.innerHeight 
+  cvs.width = width
+  cvs.height = height
+
+  const ctx = cvs.getContext('2d')
+
+  const columnWidth = 20
+
+  const columnCount = Math.floor(window.innerWidth / columnWidth)
+
+  const columnNextIndexes = new Array(columnCount)
+  columnNextIndexes.fill(1)
+
+  function draw() {
+    ctx.fillStyle = 'rgba(49, 37, 32,0.3)'
+    ctx.fillRect(0, 0, width, height)
+    const fz = 20
+    ctx.fillStyle = '#00e500';
+    ctx.font = `${fz}px "Roboto Mono"`
+    for (let i = 0; i < columnCount; i++) {
+      const x = i * columnWidth
+      const y = fz * columnNextIndexes[i]
+      ctx.fillText(getRandomChar(), x, y)
+      if(y > height && Math.random() > 0.99) {
+        columnNextIndexes[i] = 0
+      }
+      columnNextIndexes[i]++
+    }
+  }
+
+  function getRandomChar() {
+    const str = 'console.log(hello world)'
+    return str[Math.floor(Math.random() * str.length)]
+  }
+
+  draw()
+  setInterval(draw, 70)
+
+</script>
+</body>
+</html>
