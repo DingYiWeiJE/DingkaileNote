@@ -1,37 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flex布局</title>
+  <title>丁凯乐又来测试了</title>
   <style>
-    .container {
+    body {
       display: flex;
-      align-items: center; /* 垂直居中对齐 */
-      height: 100px;
-      border: 1px solid black;
-      padding: 0 10px; /* 添加一些内边距 */
-    }
-    .box {
-      border: 1px solid black;
-      padding: 10px; /* 添加内边距 */
-    }
-    .left, .right {
-      width: 50px; /* 左右两侧盒子固定宽度 */
-    }
-    .flexible {
-      flex: 1; /* 中间盒子占据剩余空间 */
-    }
-    .flexible h1 {
-      /* white-space: nowrap; 不换行 */
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+      width: 100vw;
+      background: #e0f0e9;
+
+      .center {
+        height: 300px;
+        width: 300px;
+        &:hover {
+        }
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="box left">固定</div>
-    <div class="box flexible"><h1>变多的内容变多的内容变多的内容变多的内容</h1></div>
-    <div class="box right">固定</div>
+  <div class="center">
   </div>
 </body>
+
 </html>

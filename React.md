@@ -1,3 +1,41 @@
+# 官方脚手架搭建项目
+
+## 创建项目
+
+```node
+pnpx create-react-app 项目名称  --template typescript
+```
+
+## 配置打包路径
+
+> 在package.json中添加homepage字段
+>
+> ```json
+> {
+> "name": "react-app",
+> "version": "0.1.0",
+> "private": true,
+> "homepage": "/your-base-path/"
+> // 其他字段...
+> }
+> ```
+
+打包发包即可
+
+
+
+# umi
+
+## 创建项目
+
+```
+pnpm dlx create-umi@latest
+```
+
+
+
+
+
 # HOC
 
 ## 抽离重复的代码，提升代码的复用性
