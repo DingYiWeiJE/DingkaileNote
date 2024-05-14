@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>丁凯乐又来测试了</title>
+  <style>
+    /* 
+    柔和
+    #c0ebd7   #fff2df   #ffc64b #afdd2  #ffb3a7 #ff4e20  #a1afc9  #edd1d8 #a0d8ef
+    亮
+    #ff7500   #70f3ff #00e079   #faff72 #ffea00
+    
+    */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+      width: 100vw;
+      background: #e0f0e9;
+      background-image: url('../imgs/G14.jpg');
+      background-size: cover;
+      background-position: center;
+
+      .center {
+        position: relative;
+        height: 300px;
+        width: 300px;
+        border-radius: 20px;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          height: 200%;
+          width: 200%;
+          z-index: -2;
+          background: pink;
+          left: 50%;
+          top: 50%;
+          border-radius: 20px;
+          transform-origin: 0 0;
+          animation: rotate 4s linear infinite;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          height: calc(100% - 8px);
+          width: calc(100% - 8px);
+          z-index: -1;
+          top: 4px;
+          left: 4px;
+          background: #ff7500;
+          border-radius: 20px;
+        }
+      }
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(1turn);
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="center">
+  </div>
+</body>
+
+</html>
