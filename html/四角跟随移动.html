@@ -63,8 +63,8 @@
         .corner {
           position: absolute;
           --t: 3px;  /* 线条的粗细 */
-          --l: 30px;  /* 线条的长度 */
-          --g: 15px; /* 线条与图片的间隔 */
+          --l: 15px;  /* 线条的长度 */
+          --g: 10px; /* 线条与图片的间隔 */
           --s: 80px; /* 图片的大小 */
           --x: 0px; /* 线条的x轴偏移量 */
           --y: 0px; /* 线条的y轴偏移量 */
@@ -76,7 +76,16 @@
           margin-left: calc(var(--g) * -1 );
           margin-top: calc(var(--g) * -1);
           transform: translate(var(--x), var(--y));
-        }
+          transition: 0.5s;
+          -webkit-mask: conic-gradient(
+            at var(--l) var(--l),
+            transparent 75%,
+            black 75% 100%
+            )
+            0 0 /* 位置在左上角 */
+            / calc(100% - var(--l)) calc(100% - var(--l)) /* 宽高 */
+            repeat; /*让这个创建的蒙版重复，就可以得到四个角的蒙版了*/ 
+          }
       }
     }
   </style>
