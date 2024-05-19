@@ -40,4 +40,15 @@
   </div>
 </body>
 
+<script>
+  document.addEventListener('visibilitychange', function () {
+    console.log('23423')
+    if (document.hidden) {
+      console.log('页面被隐藏');
+    } else {
+      console.log('页面被显示');
+    }
+  })
+</script>
+
 </html>
