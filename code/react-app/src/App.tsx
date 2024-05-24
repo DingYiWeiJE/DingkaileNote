@@ -4,6 +4,8 @@ import './App.css';
 import { MobxDemo, dingkaile } from './pages/mobx';
 
 import {autorun} from 'mobx'
+import { TodoList } from './pages/context/TodoList';
+import { DingContext } from './pages/context/DingContext';
 
 function App() {
   const [name, setName] = useState('超级大魔王')
@@ -17,8 +19,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        {name}
-      <MobxDemo/>
+        {/* {name} */}
+      {/* <MobxDemo/> */}
+      <DingContext></DingContext>
       </header>
     </div>
   );
