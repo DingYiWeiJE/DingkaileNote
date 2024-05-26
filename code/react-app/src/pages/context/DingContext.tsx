@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TodoList } from "./TodoList";
 import { ConfigContext } from "../../constext/ConfigContext";
-import { configData } from "../../configData";
+import { configData } from "../../config/configData";
 import DingkialeProvider from "../../constext/DingkaileContext";
 
 export function DingContext() {

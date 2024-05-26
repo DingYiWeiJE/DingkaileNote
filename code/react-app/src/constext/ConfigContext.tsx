@@ -1,4 +1,4 @@
-import { IConfig } from "../configData";
+import { IConfig } from "../config/configData";
 import {createContext} from 'react'
 
 export const ConfigContext = createContext<{
