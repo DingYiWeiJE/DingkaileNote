@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>丁凯乐又来测试了</title>
+  <style>
+    /* 
+    柔和
+    #c0ebd7   #fff2df   #ffc64b #afdd2  #ffb3a7 #ff4e20  #a1afc9  #edd1d8 #a0d8ef
+    亮
+    #ff7500   #70f3ff #00e079   #faff72 #ffea00
+    
+    */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+      width: 100vw;
+      background: #000;
+      background-size: cover;
+      background-position: center;
+    }
+
+    span {
+      color: #fff;
+      font-size: 100px;
+      font-weight: bold;
+      animation: shadowing 1s infinite alternate;
+      -webkit-text-stroke: 1px #fff;
+      cursor: pointer;
+      &:nth-child(n+2){
+        animation-delay:0.2s;
+      }
+      &:nth-child(n+3){
+        animation-delay:0.3s;
+      }
+      &:nth-child(n+4){
+        animation-delay:0.4s;
+      }
+      &:nth-child(n+5){
+        animation-delay:0.5s;
+      }
+      &:nth-child(n+6){
+        animation-delay:0.6s;
+      }
+      &:nth-child(n+7){
+        animation-delay:0.7s; 
+        
+      }
+      &:nth-child(n+8){
+        animation-delay:0.8s;
+      }
+    }
+
+    @keyframes shadowing {
+      to {
+        color: #ff0266;
+        text-shadow: 0 0 10px #ff0266, 0 0 20px #ff0266, 0 0 40px #ff0266, 0 0 80px #ff0266, 0 0 160px #ff0266;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <span>F</span>
+  <span>O</span>
+  <span>L</span>
+  <span>L</span>
+  <span>O</span>
+  <span>W</span>
+  <span>M</span>
+  <span>E</span>
+</body>
+
+<script>
+</script>
+
+</html>
