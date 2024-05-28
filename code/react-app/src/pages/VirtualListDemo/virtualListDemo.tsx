@@ -1,7 +1,7 @@
 import React from 'react';
 import {ListItem, VirtualList} from './VirtualList';
 
-const items: ListItem[] = new Array(15).fill(0).map((_, index) => ({
+const items: ListItem[] = new Array(1555).fill(0).map((_, index) => ({
   id: index,
   content: `Item ${index}`,
 }));
