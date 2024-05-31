@@ -3,20 +3,27 @@ import Draggable from 'react-draggable';
 import { Resizable, ResizeCallbackData } from 'react-resizable';
 
 const DraggableResizableWindow = () => {
-  const [width, setWidth] = useState<number>(200);
-  const [height, setHeight] = useState<number>(200);
+  const [width, setWidth] = useState(200);
+  const [height, setHeight] = useState(200);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const onResize = (event: React.SyntheticEvent, { size }: ResizeCallbackData) => {
-    setWidth(size.width);
-    setHeight(size.height);
+    const { width, height } = size;
+    setWidth(width);
+    setHeight(height);
+  };
+
+  const onDrag = (event: any, { deltaX, deltaY }: any) => {
+    setPosition({ x: position.x + deltaX, y: position.y + deltaY });
   };
 
   return (
-    <Draggable>
+    <Draggable onDrag={onDrag} position={position}>
       <Resizable
         width={width}
         height={height}
         onResize={onResize}
+        draggableOpts={{ grid: [25, 25] }}
       >
         <div
           style={{
@@ -27,7 +34,7 @@ const DraggableResizableWindow = () => {
             position: 'relative',
           }}
         >
-          <div style={{ padding: '10px' }}>Resizable and draggable window</div>
+          <div style={{ padding: '10px' }}>可拖动且可调整大小的窗口</div>
           <div
             style={{
               position: 'absolute',
