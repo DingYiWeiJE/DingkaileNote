@@ -1,0 +1,42 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import brandImg from '../assets/home/brand_mobile.png'; // 请根据你的项目结构调整路径
+
+const imageSrc = ref(brandImg);
+</script>
+
+<template>
+  <ul class="navigation_bar">
+    <li>
+      <img :src="imageSrc" alt="Brand Logo" width="100%" height="50">
+    </li>
+    <li><router-link to="/">Home</router-link></li>
+  </ul>
+</template>
+
+
+<style scoped lang="scss">
+.navigation_bar{
+  list-style-type: none;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 1rem;
+
+  li{
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  li a{
+    text-decoration: none;
+    color: black;
+    font-size: 0.5rem;
+  }
+}
+
+</style>
