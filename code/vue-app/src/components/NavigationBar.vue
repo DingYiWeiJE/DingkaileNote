@@ -25,14 +25,14 @@ const imageSrc = ref(brandImg);
   margin: 0;
   padding: 0;
   width: 100%;
-  height: .8rem;
+  height: 1.6rem;
 
   li {
     display: flex;
     align-items: center;
 
     img{
-      height: .4rem;
+      height: 1rem;
       object-fit: cover;
     }
 
