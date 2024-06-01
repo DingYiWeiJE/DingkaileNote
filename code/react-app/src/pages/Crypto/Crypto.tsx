@@ -1,48 +1,27 @@
-import React, { useState } from 'react';
-import Draggable from 'react-draggable';
-import { Resizable, ResizeCallbackData } from 'react-resizable';
+import { useState } from "react"
+// import { encrypt } from "./cryptoTools"
 
-const DraggableResizableWindow = () => {
-  const [width, setWidth] = useState<number>(200);
-  const [height, setHeight] = useState<number>(200);
+export default function () {
+  const [before, setBefore] = useState<string>('')
+  const [after, setAfter] = useState<string>('')
 
-  const onResize = (event: React.SyntheticEvent, { size }: ResizeCallbackData) => {
-    setWidth(size.width);
-    setHeight(size.height);
-  };
 
-  return (
-    <Draggable>
-      <Resizable
-        width={width}
-        height={height}
-        onResize={onResize}
-      >
-        <div
-          style={{
-            width: `${width}px`,
-            height: `${height}px`,
-            border: '1px solid #000',
-            backgroundColor: '#fff',
-            position: 'relative',
-          }}
-        >
-          <div style={{ padding: '10px' }}>Resizable and draggable window</div>
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '5px',
-              right: '5px',
-              cursor: 'nwse-resize',
-              width: '10px',
-              height: '10px',
-              backgroundColor: '#000',
-            }}
-          />
-        </div>
-      </Resizable>
-    </Draggable>
-  );
-};
+  const setKey = () => {
+    var key = prompt("请输入需要加密的文:", "丁凯乐称霸全世界");
+    if (key != null && key != "") {
+      setBefore(key)
+      // const result = encrypt(key)
+      setAfter(encodeURIComponent(key))
+    }
+  }
+  return <div onClick={setKey}>
+    <h1>
 
-export default DraggableResizableWindow;
+      加密之前：{before}
+    </h1>
+    <h3>
+
+    加密之后：{after}
+    </h3>
+  </div>
+}
