@@ -15,7 +15,7 @@
     background: url('../assets/home/home_show_bg.jpg') no-repeat;
     background-size: 100% 100%;
     width: 100vw;
-    height: 6rem;
+    height: 160px;
     padding-top: 10%;
     padding-left: 10%;
 
