@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && VITE_BASE_URL=/EvayPortal/ vite build",
+    "build": "vue-tsc && vite build",
     "build:prod": "vue-tsc && vite build",
     "preview": "vite preview"
   },

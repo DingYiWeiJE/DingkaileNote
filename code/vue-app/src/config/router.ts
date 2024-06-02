@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Home from '../pages/Home.vue';
+import Home from '../pages/Home/Home.vue';
 import About from '../pages/About.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/EvayPortal/'),
   routes
 });
 
