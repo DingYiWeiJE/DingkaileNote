@@ -15,6 +15,7 @@ const handleClick = () => {
 <template>
 	<div class="product_tab">
 		<el-button type="primary" @click="handleClick">Primary</el-button>
+		
 		<el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
 			<el-tab-pane label="Outdoor table chairs" name="1">
 				<TableChairTab />

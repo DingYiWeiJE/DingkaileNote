@@ -50,7 +50,6 @@ import ProductListTab from './ProductListTab/ProductListTab.vue'
 
 <style scoped lang="scss">
 @import '@/assets/font/font.scss';
-
 .home {
   .home_show {
     text-align: center;
