@@ -1,49 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>丁凯乐又来测试了</title>
   <style>
-    /* 
-    柔和
-    #c0ebd7   #fff2df   #ffc64b #afdd2  #ffb3a7 #ff4e20  #a1afc9  #edd1d8 #a0d8ef
-    亮
-    #ff7500   #70f3ff #00e079   #faff72 #ffea00
-    
-    */
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      margin: 0;
-      height: 100vh;
-      width: 100vw;
-      background: url('./imgs/G14.jpg');
-      background-size: cover;
-      background-position: center;
-
-      .center {
-        height: 50%;
-        width: 80%;
-        background: white;
-        border-radius: 20px;
-        mix-blend-mode: screen;
-        font-size: 10vw;
+    .container{
+      background-color: pink;
+      width: 1000px;
+      height: 300px;
+      .scroll{
+        border: 1px solid red;
+        width: 300px;
+        height: 1000px;
+        .content{
+          height: 300px;
+        }
       }
     }
   </style>
 </head>
-
 <body>
-  <div class="center">
-    我是丁凯乐
+  <div class="container">
+    <div class="scroll">
+      <div class="content"></div>
+    </div>
   </div>
+
 </body>
-
-<script>
-</script>
-
 </html>
