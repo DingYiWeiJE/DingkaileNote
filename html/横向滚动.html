@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    div{
+      box-sizing: border-box;
+    }
+    .container{
+      width: 1000px;
+      height: 300px;
+      .scroll{
+        position: relative;
+        overflow: auto;
+        width: 300px;
+        height: 1000px;
+        direction: rtl; 
+        transform: translateY(300px) rotate(-90deg);
+        transform-origin: left top;
+        &::-webkit-scrollbar {
+          width: 4px;
+        }
+        &::-webkit-scrollbar-thumb{
+          background: blue;
+        }
+        &::-webkit-scrollbar-track {
+          border-radius: 0;
+          background: transparent;
+        }
+        .content{
+          padding-top: 40px;
+          display: flex;
+          flex-direction: row-reverse;
+          position: absolute;
+          gap: 10px;
+          left: 100%;
+          height: calc(300px - 4px);
+          transform-origin: left top;
+          transform: rotate(90deg);
+          div{
+            background-color: aquamarine;
+            height: 100px;
+            width: 100px;
+          }
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="scroll">
+      <div class="content">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        <div>10</div>
+        <div>11</div>
+        <div>12</div>
+        <div>13</div>
+        <div>14</div>
+        <div>15</div>
+        <div>16</div>
+        <div>17</div>
+        <div>18</div>
+        <div>19</div>
+        <div>20</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
