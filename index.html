@@ -3,28 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    .container{
-      background-color: pink;
-      width: 1000px;
-      height: 300px;
-      .scroll{
-        border: 1px solid red;
-        width: 300px;
-        height: 1000px;
-        .content{
-          height: 300px;
-        }
-      }
-    }
-  </style>
+  <title>Audio Visualizer with Volume Meter</title>
 </head>
 <body>
-  <div class="container">
-    <div class="scroll">
-      <div class="content"></div>
-    </div>
-  </div>
+  <audio src="./imgs/I cursed you.mp3" controls autoplay></audio>
+  <canvas id="visualizer" width="600" height="250"></canvas>
+  <canvas id="volumeMeter" width="600" height="250"></canvas>
 
+  <script>
+    const audioEle = document.querySelector('audio');
+    const canvas = document.getElementById('visualizer');
+    const canvasCtx = canvas.getContext('2d');
+    const volumeCanvas = document.getElementById('volumeMeter');
+    const volumeCtx = volumeCanvas.getContext('2d');
+
+    let isInit = false,
+      analyser, dataArray, bufferLength;
+
+    audioEle.onplay = function () {
+      if (isInit) {
+        return;
+      }
+      const audio = new AudioContext();
+      const source = audio.createMediaElementSource(audioEle);
+      analyser = audio.createAnalyser();
+      analyser.fftSize = 512;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+
+      source.connect(analyser);
+      analyser.connect(audio.destination);
+      draw();
+
+      isInit = true;
+    };
+
+    function draw() {
+      requestAnimationFrame(draw);
+      if (!isInit) {
+        return;
+      }
+      analyser.getByteFrequencyData(dataArray);
+      canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const barWidth = (canvas.width / bufferLength) * 1.5;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i] * 2;
+
+        const hue = i / bufferLength * 360;
+        canvasCtx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+        canvasCtx.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight / 2);
+
+        x += barWidth + 1;
+      }
+
+      // 计算平均音量
+      let average = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        average += dataArray[i];
+      }
+      average /= bufferLength;
+
+      // 更新音量图表
+      volumeCtx.clearRect(0, 0, volumeCanvas.width, volumeCanvas.height);
+      volumeCtx.fillStyle = 'pink';
+      volumeCtx.fillRect(0, 0, average * 6, volumeCanvas.height);
+
+      // volumeCtx.beginPath();
+      // volumeCtx.strokeStyle = '#ffffff';
+      // volumeCtx.lineWidth = 2;
+
+      // volumeCtx.moveTo(0, volumeCanvas.height - average);
+      // volumeCtx.lineTo(volumeCanvas.width, volumeCanvas.height - average);
+      // volumeCtx.stroke();
+    }
+  </script>
 </body>
 </html>
