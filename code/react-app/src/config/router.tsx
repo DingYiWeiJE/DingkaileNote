@@ -4,6 +4,7 @@ import Provider from "../pages/Provider/Provider";
 import VirtualListDemo from "../pages/VirtualListDemo/virtualListDemo";
 import IndexDb from "../pages/IndexDb/IndexDb";
 import Crypto from "../pages/Crypto/Crypto";
+import MyState from "../pages/MyState/MyState";
 import SelfAdaption from "../pages/SelfAdaption/SelfAdaption";
 
 export const routerArr = [
@@ -35,6 +36,11 @@ export const routerArr = [
     path: "/EvayWeb/myRem",
     name: '自适应',
     element: <SelfAdaption/>,
+  },
+  {
+    path: "/EvayWeb/myState",
+    name: '状态管理',
+    element: <MyState/>,
   },
 ]
 
