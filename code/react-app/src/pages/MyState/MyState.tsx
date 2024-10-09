@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useMyStore } from './MyStore';
+import { TelegramClient } from 'telegram';
 
 export default  function () {
   const [myState, setMyState] = useMyStore();
+
+  useEffect(() => {
+    console.log(TelegramClient)
+  }, [])
 
   return (
     <div>
