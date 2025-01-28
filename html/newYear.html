@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Rain & Heart Animation</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: black;
+    }
+    canvas {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+    }
+    .img {
+      position: fixed;
+      width: 50%;
+      aspect-ratio: 1;
+      top: 25%;
+      left: 25%;
+      object-fit: cover;
+      z-index: 9999;
+      border-radius: 100%;
+    }
+  </style>
+</head>
+<body>
+  <!-- Code Rain Canvas -->
+  <canvas id="bg"></canvas>
+
+  <!-- Heart Animation Canvas -->
+  <canvas id="heartCanvas"></canvas>
+
+  <img class="img" src="https://img1.baidu.com/it/u=1718678628,941703067&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1422" alt="Code Rain">
+
+  <script>
+    // Code Rain Variables
+    const cvs = document.getElementById('bg');
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    cvs.width = width;
+    cvs.height = height;
+    const ctx = cvs.getContext('2d');
+    const columnWidth = 40;
+    const columnCount = Math.floor(window.innerWidth / columnWidth);
+    const columnNextIndexes = new Array(columnCount);
+    columnNextIndexes.fill(0);
+    const message = '娇儿除夕快乐';
+
+    // Heart Animation Variables
+    const heartCanvas = document.getElementById("heartCanvas");
+    const heartCtx = heartCanvas.getContext("2d");
+    heartCanvas.width = window.innerWidth;
+    heartCanvas.height = window.innerHeight;
+    const hearts = [];
+
+    // Code Rain Draw Function
+    function drawCodeRain() {
+      ctx.fillStyle = 'rgba(49, 37, 32, 0.15)';
+      ctx.fillRect(0, 0, width, height);
+      
+      const fz = 20;
+      ctx.fillStyle = '#ff0000';
+      ctx.font = `${fz}px "Roboto Mono"`;
+
+      for (let i = 0; i < columnCount; i++) {
+        const x = i * columnWidth;
+        const y = fz * columnNextIndexes[i];
+        const charIndex = (columnNextIndexes[i] % message.length);
+        ctx.fillText(message[charIndex], x, y);
+
+        if (y > height && Math.random() > 0.98) {
+          columnNextIndexes[i] = 0;
+        }
+
+        columnNextIndexes[i]++;
+      }
+    }
+
+    // Heart Animation Functions
+    function createHeart() {
+      const size = Math.random() * 30 + 20;
+      const x = heartCanvas.width / 2;
+      const y = heartCanvas.height / 2;
+      const speed = Math.random() * 2 + 1;
+      const angle = Math.random() * 2 * Math.PI;
+      hearts.push({
+        x,
+        y,
+        size,
+        speed,
+        angle,
+        opacity: 1,
+      });
+    }
+
+    function drawHearts() {
+      heartCtx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
+
+      hearts.forEach((heart, index) => {
+        heartCtx.font = `${heart.size}px Arial`;
+        heartCtx.fillStyle = `rgba(255, 0, 0, ${heart.opacity})`;
+        heartCtx.fillText("❤", heart.x, heart.y);
+
+        heart.x += Math.cos(heart.angle) * heart.speed;
+        heart.y += Math.sin(heart.angle) * heart.speed;
+
+        heart.opacity -= 0.005;
+
+        if (heart.opacity <= 0 || heart.x < 0 || heart.x > heartCanvas.width || heart.y < 0 || heart.y > heartCanvas.height) {
+          hearts.splice(index, 1);
+        }
+      });
+    }
+
+    // Main Animation Loop
+    function animate() {
+      drawCodeRain();
+      setTimeout(animate, 50);
+    }
+
+    function heartAnimate() {
+      drawHearts();
+      createHeart();
+      requestAnimationFrame(heartAnimate);
+    }
+
+    // Start the animation
+    animate();
+    heartAnimate()
+  </script>
+</body>
+</html>
