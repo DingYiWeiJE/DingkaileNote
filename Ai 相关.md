@@ -143,7 +143,7 @@ python test_langchain.py
 + 在根目录创建.env文件
 
   ```json
-  OPENAI_API_KEY=秘钥
+  OPENAI_API_KEY=key
   ```
 
   ```shell
@@ -322,7 +322,19 @@ Langchain对大模型的封装主要包括LLM和Chat Model两种类型
 
 # LangChain提示词模版
 
-其实输入的知识一个参数，真正到LLM的时候是已经被Format过了的。
+## PromptTemplate 消息模板
+
+```python
+from langchain.prompts import PromptTemplate
+
+prompt = PromptTemplate.from_template("你的名字叫做{name},你的年龄是{age}")
+
+result = prompt.format(name="张三", age=18)
+
+print(result)
+```
+
+## ChatPromptTemplate  对话模板
 
 + **from_messages**
 
@@ -357,9 +369,11 @@ Chat Model 聊天模式以聊天消息列表作为输入，每个消息都与角
 
 
 
-## 对象的方式进行定义
+### 对象的方式进行定义
 
-如果需要接收参数，就用SystemMessagePromptTemplate.from_template； 不需要接收参数就用SystemMessage
+如果需要接收参数，就用SystemMessagePromptTemplate.from_template； 不需要接收参数就用SystemMessage，因为SystemMessage中的content是一个字符串而非模板字符串；其他两种类亦然
+
+SystemMessage  系统；  HumanMessage 人类；  AIMessage 大模型
 
 ```python
 chat_template = ChatPromptTemplate.from_messages([
@@ -379,10 +393,292 @@ message = chat_template.format_messages(name="张三", user_input="今天天气�
 print(message)
 ```
 
+三个类也是可以独立写，直接创建消息
+
+```puthon
+sy = SystemMessage(
+	content="你是一个起名大师",
+  assitional_kwargs={"大师名字":"王麻子"}
+)
+
+hu = HumanMessage(
+	constent="请问大师叫什么"
+)
+
+ai = AIMessage(
+	content="我叫王麻子"
+)
+
+print([sy, hu, ai])
+```
+
+三个类的模板化示例：
+
+```python
+prompt = "我是来自{address},我深爱着我的家乡"
+
+# chat_prompt = AIMessagePromptTemplate.from_template(template=prompt)
+# chat_prompt = HumanMessagePromptTemplate.from_template(template=prompt)
+# chat_prompt = SystemMessagePromptTemplate.from_template(template=prompt)
+# 前三者都不需要指定角色，下面这个是需要指定角色的
+chat_prompt = ChatMessagePromptTemplate.from_template(role="这里不仅局限于那三种角色", template=prompt)
+
+message = chat_prompt.format(address="地球")
+
+print(message)
+```
+
+
+
+## StringPromptTemplate自定义模板
+
+在自定义模板的时候，创建的类需要实例化format方法
+
+```python
+from langchain_core.prompts import StringPromptTemplate
+
+
+def hello_word(address):
+    print("Hello, world!" + address)
+    return f"Hello, {address}!"
+
+
+PROMPT = """\
+    You are a helpful assistant that answers questions based on the provided context.
+    function name: {function_name}
+    source code:
+    {source_code}
+    explain:
+"""
+
+import inspect  # 这个包可以根据函数名，获取到函数源代码
+
+
+def get_source_code(function_name):
+    # 获取源代码
+    return inspect.getsource(function_name)
+
+
+class CustmPromt(StringPromptTemplate):
+    def format(self, **kwargs) -> str:
+        source_code = get_source_code(kwargs["function_name"])
+
+        prompt = PROMPT.format(
+            function_name=kwargs["function_name"].__name__, source_code=source_code
+        )
+        return prompt
+
+
+a = CustmPromt(input_variables=["function_name"])
+pm = a.format(function_name=hello_word)
+print(pm)
+
+```
+
+
+
+
+
 ## MessagesPlaceholder
 
 相当于一个消息的占位符，可以传入一组消息。  可以把一段聊天记录插进去，提供上下文。
 
+```python
+chat_template = ChatPromptTemplate.from_messages([
+    ("system", "你是一个搞笑风趣的智能助手"),
+    MessagesPlaceholder("msgs")
+])
+message = chat_template.invoke({"msgs": [HumanMessage(content="hi!"), HumanMessage(content="hello!")]})
+print(message)
 ```
 
+
+
+## 提示词追加示例
+
+**FewShotPromptTemplate**
+
+可以有效的解决大模型出现幻觉的问题，如果没有给出示例，那么生成的内容就会比较宽泛. 
+
+可以看作是一个简单的知识库，风格，格式，答案；如果在模版中答案已经有了的话，就会直接从答案中组织语言作答。
+
+```python
+
+example = [
+    {
+        "question": "谁的寿命更长，悟空还是如来",
+        "answer":
+            """
+            这里需要跟进问题吗： 是的。
+            跟进： 悟空在记载中，最后能够追溯到他有多大年龄？
+            中间答案： 五千岁
+            跟进： 如来呢？
+            中间答案： 佛祖在记载中，最后能够追溯到他多大年龄是一万岁。
+            所以最终答案是： 悟空五千年，如来一万岁，所以如来寿命更长。
+            """
+    },
+    {
+        "question": "高中重要还是大学重要",
+        "answer":
+            """
+            这里需要跟进问题吗： 是的。
+            跟进：高中的重要性在于什么？
+            中间答案： 高中的重要性是考上一个好的大学，考不上好的大学大概率就完蛋了。
+            跟进： 大学的重要性是什么？
+            中间答案： 大学的重要性是学会技能，适应社会，哪怕学校不好，也能很小几率靠自己打拼出来。
+            所以最终答案是： 高中更重要。
+            """
+    },
+]
+
+example_prompt = PromptTemplate(input_variables=["question", "answer"], template="问题：{question}\n{answer}")
+# 做了个格式化
+
+prompt = FewShotPromptTemplate(
+    example_prompt=example_prompt,  # 这里需要是PromptTemplate(提示词模板)
+    examples=example,  # 这里需要是列表
+    suffix="问题：{input}",
+    input_variables=["input"]
+)
+
+print(prompt.format(input="谁更厉害，孙悟空还是如来"))
+
 ```
+
+也可以之塞入其中一个示例：
+
+```python
+print(example_prompt.format(**examples[0])
+      
+# 相当于：
+      
+print(example_prompt.format("question"="谁的寿命更长，悟空还是如来", "answer"=
+            """
+            这里需要跟进问题吗： 是的。
+            跟进： 悟空在记载中，最后能够追溯到他有多大年龄？
+            中间答案： 五千岁
+            跟进： 如来呢？
+            中间答案： 佛祖在记载中，最后能够追溯到他多大年龄是一万岁。
+            所以最终答案是： 悟空五千年，如来一万岁，所以如来寿命更长。
+            """)
+```
+
+
+
+
+
+## 示例选择器(向量相似度匹配)
+
+会有成千上万个示例，为了节省token，不可能把所有的示例都带上。所以在选样本数据的时候，需要把问的问题跟示例上的问题做匹配，然后取出来
+
+使用 **SemanticSimilarityExampleSelector**根据输入的相似性选择小样本示例，它使用嵌入式模型计算输入和小样本示例之间的相似性，然后使用向量数据库执行相似搜索，获取跟输入相似的示例。
+
+```shell
+pip install chromadb
+```
+
+```python
+example_selector = SemanticSimilarityExampleSelector.from_examples(
+    examples,
+    OpenAIEmbeddings(openai_api_key="..."),
+    Chroma,
+    k=1
+)
+
+question = "寿命长短"
+selected_examples = example_selector.select_examples({"question": question})
+
+print(f"最相似的示例:{question}")
+for example in selected_examples:
+    print("\\n")
+    for k, v in example.items():
+        print(f"{k}: {v}")
+```
+
+使用本地大模型
+
+```python
+class DeepSeekEmbeddings:
+    def __init__(self, model_name="deepseek-local"):
+        self.model_name = model_name
+        self.embedding_dim = 1024  # 必须与实际模型维度一致
+
+    def embed_documents(self, texts):
+        return [
+            [float(i%100)/100 for i in range(self.embedding_dim)]
+            for _ in texts
+        ]
+
+    def embed_query(self, text):
+        return self.embed_documents([text])[0]
+```
+
+```python
+from langchain.prompts.example_selector import SemanticSimilarityExampleSelector
+from langchain_community.vectorstores import Chroma
+
+class DeepSeekEmbeddings:
+    def __init__(self, model_name="deepseek-local"):
+        self.model_name = model_name
+        self.embedding_dim = 1024  # 必须与实际模型维度一致
+
+    def embed_documents(self, texts):
+        return [
+            [float(i%100)/100 for i in range(self.embedding_dim)]
+            for _ in texts
+        ]
+
+    def embed_query(self, text):
+        return self.embed_documents([text])[0]
+
+example_selector = SemanticSimilarityExampleSelector.from_examples(
+    examples,
+    DeepSeekEmbeddings(),
+    Chroma,
+    k=1
+)
+
+question = "快乐星球在哪里"
+selected_examples = example_selector.select_examples({"question": question})
+
+print(f"最相似的示例:{question}")
+for example in selected_examples:
+    print("\n".join([f"{k}: {v}" for k, v in example.items()]))
+```
+
+
+
+# LangChain 工作流编排 
+
+LCEL是一种强大的工作流编排工具，可以从基本组件构建复杂任务链条（chain）， 并支持诸如流式处理、并行处理和日志记录等开箱急用的功能
+
++ **流式调用**
+
+使用 LCEL（LangChain 表达式语言）构建处理链时，最大的优势在于它能以最快的速度让用户看到第一个输出结果。例如，当你输入一个请求后，系统会像流水线一样逐块处理数据：语言模型生成一部分内容，解析器立刻处理这部分内容并实时显示给用户。整个过程类似于 “边生成边解析”，而非等所有内容生成完毕后再统一处理。因此，用户几乎能在语言模型生成文字的同时，逐步看到解析后的结果，无需长时间等待全部内容生成完成。这种设计特别适用于需要即时反馈的场景
+
++ **异步支持**
+
+可以使用同步以及异步API进行调用，能够在同一服务器中处理许多并发请求；更关键的是，当流程中存在可并行执行的环节（如同时检索多个数据库），LCEL 会自动优化执行顺序，显著减少整体延迟。这种设计既保持了代码简洁性，又实现了专业级系统的性能要求。
+
++ **并行执行优化机制**
+
+LCEL（LangChain 表达式语言）的并行执行优化机制旨在提升 AI 任务链的处理效率。其核心原理在于：当开发者构建的链式流程中存在多个可独立运行的步骤（例如同时调用多个文档检索器），系统会自动识别这些并行化节点，并在同步或异步接口中同时调度执行，而非按顺序逐个处理。这种动态并发控制能够显著降低任务链的整体延迟，尤其在涉及 I/O 密集型操作（如网络请求或外部数据检索）时，通过消除不必要的等待时间实现性能优化。
+
+具体而言，该机制通过以下技术路径实现：
+
+​	首先，在链式结构解析阶段，LCEL 会分析各节点的依赖关系，识别出无状态关联且资源占用不冲突的可并行模块；
+
+​	其次，系统根据运行时环境自动选择最优调度策略，例如在同步接口中采用多线程并发，在异步接口中则利用协程非阻塞执行；
+
+​	最后，所有并行节点的执行结果会被动态整合至后续处理流程，确保数据流的一致性。这种智能化的并行化处理使得开发者无需手动设计并发逻辑，即可在保持代码简洁性的同时获得接近理论极限的执行效率。
+
++ **重试和回退**
+
+在调用失败的时候，会重试和回退
+
++ **访问中间结果**
+
+对于更复杂的链，访问中间步骤的结果通常非常有用，即使在生成最终输出之前，这可以用于让最终用户知道正在发生的事情。并且在每个LangServe服务器上都可以使用
+
++ **输入和输出模式**
+
