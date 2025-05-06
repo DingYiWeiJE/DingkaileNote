@@ -1,4 +1,10 @@
-let reg = /[12346！]/g
-let hd = 'y任561天！野'
-console.log(reg.test(hd))
-console.log(hd.match(reg))
+var scope = "global scope";
+function checkscope(){
+    var scope = "local scope";
+    function f(){
+        return scope;
+    }
+    return f;
+}
+const res = checkscope()();
+console.log(res);
