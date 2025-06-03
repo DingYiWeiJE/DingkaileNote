@@ -103,6 +103,17 @@ dingyiwei@MacBook-Pro db % source dbtest/bin/activate
 deactivate
 ```
 
+### 项目中自动进入虚拟环境
+
++ 设置
++ project： 项目文件夹
++ Python Interpreter
++ add interpreter
++ Add Local Interpreter
++ Virtualenv Eviroment
++ 在当前项目目录中创建一个新的文件夹
++ applay
+
 
 
 ## 使用环境变量
