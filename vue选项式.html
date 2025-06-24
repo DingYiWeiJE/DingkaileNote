@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue 数据类型监听示例</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.5.13/vue.global.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    select, pre { margin-top: 10px; }
+
+    .string { color: blue; }
+    .number { color: green; }
+    .boolean { color: orange; }
+    .array { color: purple; }
+    .object { color: brown; }
+    .valid { color: green; font-weight: bold; }
+    .invalid { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <form action="">
+      <label for="name">姓名：</label>
+      <input type="text" id="name" v-model="name">
+      <br>
+
+      <label for="age">年龄：</label>
+      <input type="number" id="age" v-model.number="age">
+      <br>
+
+      <label for="city">城市：</label>
+      <input type="text" id="city" v-model="address.city">
+      <br>
+
+      <label for="street">街道：</label>
+      <input type="text" id="street" v-model="address.street">
+      <br>
+    </form>
+  </div>
+
+  <script>
+    const { createApp, watch } = Vue;
+
+    createApp({
+      data() {
+        return {
+          name: '张三',
+          age: 18,
+          address: {
+            city: '北京',
+            street: '长安街'
+          }
+        };
+      },
+      watch: {
+        name: {
+          handler(newVal, oldVal) {
+            console.log('name changed:', newVal, oldVal);
+          }
+        },
+        age: {
+          handler(newVal, oldVal) {
+            console.log('age changed:', newVal, oldVal);
+          },
+          immediate: true
+        },
+        address: {
+          handler(newVal, oldVal) {
+            console.log('address changed:', newVal, oldVal);
+          },
+          deep: true,
+          immediate: true
+        }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
