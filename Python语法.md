@@ -469,3 +469,36 @@ flask db upgrade
 ------
 
 完成后你就可以打开 PostgreSQL 数据库，看到 `user` 表已经被创建。
+
+
+
+
+
+# 第三方工具
+
+## PPT工具
+
+#### 安装工具
+
+```
+brew install libreoffice poppler
+```
+
+```
+ls /Applications/LibreOffice.app
+```
+
+```
+sudo ln -s /Applications/LibreOffice.app/Contents/MacOS/soffice /usr/local/bin/libreoffice
+```
+
+```
+libreoffice --version
+```
+
+#### 安装依赖
+
+```
+pip install pdf2image 
+```
+
