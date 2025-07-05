@@ -2,328 +2,328 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>React 树结构（内嵌 HTML）</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            user-select: none;
-        }
+	<meta charset="UTF-8" />
+	<title>React 树结构（内嵌 HTML）</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			user-select: none;
+		}
 
-        ul {
-            list-style: none;
-            padding-left: 20px;
-        }
+		ul {
+			list-style: none;
+			padding-left: 20px;
+		}
 
-        li {
-            margin: 4px 0;
-            padding: 4px;
-            border: 1px solid #ccc;
-            background: #f8f8f8;
-            border-radius: 4px;
-            position: relative;
-        }
+		li {
+			margin: 4px 0;
+			padding: 4px;
+			border: 1px solid #ccc;
+			background: #f8f8f8;
+			border-radius: 4px;
+			position: relative;
+		}
 
-        .context-menu {
-            position: absolute;
-            background: white;
-            border: 1px solid #ccc;
-            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 1000;
-        }
+		.context-menu {
+			position: absolute;
+			background: white;
+			border: 1px solid #ccc;
+			box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+			display: none;
+			z-index: 1000;
+		}
 
-        .context-menu ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
+		.context-menu ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
 
-        .context-menu li {
-            padding: 8px 12px;
-            cursor: pointer;
-        }
+		.context-menu li {
+			padding: 8px 12px;
+			cursor: pointer;
+		}
 
-        .context-menu li:hover {
-            background-color: #eee;
-        }
-    </style>
+		.context-menu li:hover {
+			background-color: #eee;
+		}
+	</style>
 </head>
 
 <body>
-    <h2>React 树结构示例（拖拽 + 右键菜单）</h2>
-    <div id="root"></div>
+	<h2>React 树结构示例（拖拽 + 右键菜单）</h2>
+	<div id="root"></div>
 
-    <div id="context-menu" class="context-menu">
-        <ul>
-            <li onclick="window.menuActions.addNode()">添加节点</li>
-            <li onclick="window.menuActions.renameNode()">重命名节点</li>
-            <li onclick="window.menuActions.deleteNode()">删除节点</li>
-        </ul>
-    </div>
+	<div id="context-menu" class="context-menu">
+		<ul>
+			<li onclick="window.menuActions.addNode()">添加节点</li>
+			<li onclick="window.menuActions.renameNode()">重命名节点</li>
+			<li onclick="window.menuActions.deleteNode()">删除节点</li>
+		</ul>
+	</div>
 
-    <!-- React & Babel -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<!-- React & Babel -->
+	<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+	<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Your React App -->
-    <script type="text/babel">
-        const { useState, useRef, useEffect } = React;
+	<!-- Your React App -->
+	<script type="text/babel">
+		const { useState, useRef, useEffect } = React;
 
-        const initialData = [
-            {
-                id: '1',
-                title: '节点 1',
-                children: [
-                    { id: '1-1', title: '节点 1-1', children: [] },
-                    { id: '1-2', title: '节点 1-2', children: [] }
-                ]
-            },
-            {
-                id: '2',
-                title: '节点 2',
-                children: []
-            }
-        ];
+		const initialData = [
+			{
+				id: '1',
+				title: '节点 1',
+				children: [
+					{ id: '1-1', title: '节点 1-1', children: [] },
+					{ id: '1-2', title: '节点 1-2', children: [] }
+				]
+			},
+			{
+				id: '2',
+				title: '节点 2',
+				children: []
+			}
+		];
 
-        const TreeNode = ({ node, onContextMenu, onDrop, editingId, setEditingId, onRename, dragOverId, setDragOverId }) => {
-            const isEditing = editingId === node.id;
-            const isDragOver = dragOverId === node.id;
-            const inputRef = useRef();
+		const TreeNode = ({ node, onContextMenu, onDrop, editingId, setEditingId, onRename, dragOverId, setDragOverId }) => {
+			const isEditing = editingId === node.id;
+			const isDragOver = dragOverId === node.id;
+			const inputRef = useRef();
 
-            useEffect(() => {
-                if (isEditing && inputRef.current) {
-                    inputRef.current.focus();
-                }
-            }, [isEditing]);
+			useEffect(() => {
+				if (isEditing && inputRef.current) {
+					inputRef.current.focus();
+				}
+			}, [isEditing]);
 
-            const handleDragStart = (e) => {
-                e.dataTransfer.setData('drag-node-id', node.id);
-                const ghost = document.createElement('div');
-                ghost.textContent = node.title;
-                ghost.style.padding = '4px 8px';
-                ghost.style.background = '#eee';
-                ghost.style.border = '1px solid #ccc';
-                document.body.appendChild(ghost);
-                e.dataTransfer.setDragImage(ghost, 0, 0);
-                setTimeout(() => document.body.removeChild(ghost), 0);
-            };
+			const handleDragStart = (e) => {
+				e.dataTransfer.setData('drag-node-id', node.id);
+				const ghost = document.createElement('div');
+				ghost.textContent = node.title;
+				ghost.style.padding = '4px 8px';
+				ghost.style.background = '#eee';
+				ghost.style.border = '1px solid #ccc';
+				document.body.appendChild(ghost);
+				e.dataTransfer.setDragImage(ghost, 0, 0);
+				setTimeout(() => document.body.removeChild(ghost), 0);
+			};
 
-            const handleDragOver = (e) => {
-                e.preventDefault();
-                setDragOverId(node.id);
-            };
+			const handleDragOver = (e) => {
+				e.preventDefault();
+				setDragOverId(node.id);
+			};
 
-            const handleDragLeave = (e) => {
-                e.preventDefault();
-                setDragOverId(null);
-            };
+			const handleDragLeave = (e) => {
+				e.preventDefault();
+				setDragOverId(null);
+			};
 
-            const handleDrop = (e) => {
-                e.preventDefault();
-                const draggedId = e.dataTransfer.getData('drag-node-id');
-                setDragOverId(null);
-                onDrop(draggedId, node.id);
-            };
+			const handleDrop = (e) => {
+				e.preventDefault();
+				const draggedId = e.dataTransfer.getData('drag-node-id');
+				setDragOverId(null);
+				onDrop(draggedId, node.id);
+			};
 
-            const handleKeyDown = (e) => {
-                if (e.key === 'Enter') {
-                    onRename(node.id, e.target.value);
-                }
-            };
+			const handleKeyDown = (e) => {
+				if (e.key === 'Enter') {
+					onRename(node.id, e.target.value);
+				}
+			};
 
-            return (
-                <li
-                    onContextMenu={(e) => {
-                        e.stopPropagation();
-                        onContextMenu(e, node.id);
-                    }}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    style={{
-                        transform: isDragOver ? 'scale(1.1)' : 'scale(1)',
-                        transition: 'transform 0.2s ease',
-                        borderColor: isDragOver ? '#007bff' : '#ccc',
-                        boxShadow: isDragOver ? '0 0 8px #007bff' : 'none',
-                    }}
-                >
-                    {isEditing ? (
-                        <input
-                            ref={inputRef}
-                            defaultValue={node.title}
-                            onBlur={(e) => onRename(node.id, e.target.value)}
-                            onKeyDown={handleKeyDown}
-                        />
-                    ) : (
-                        <div
-                            draggable
-                            onDragStart={handleDragStart}
-                            onDragOver={(e) => {
-                                e.stopPropagation();
-                                handleDragOver(e, node.id);
-                            }}
-                            onDragLeave={(e) => {
-                                e.stopPropagation();
-                                handleDragLeave(e, node.id);
-                            }}
-                        >
-                            {node.title}
-                        </div>
-                    )}
-                    {node.children?.length > 0 && (
-                        <ul>
-                            {node.children.map(child => (
-                                <TreeNode
-                                    key={child.id}
-                                    node={child}
-                                    onContextMenu={onContextMenu}
-                                    onDrop={onDrop}
-                                    editingId={editingId}
-                                    setEditingId={setEditingId}
-                                    onRename={onRename}
-                                    dragOverId={dragOverId}
-                                    setDragOverId={setDragOverId}
-                                />
-                            ))}
-                        </ul>
-                    )}
-                </li>
-            );
-        };
+			return (
+				<li
+					onContextMenu={(e) => {
+						e.stopPropagation();
+						onContextMenu(e, node.id);
+					}}
+					onDragOver={handleDragOver}
+					onDragLeave={handleDragLeave}
+					onDrop={handleDrop}
+					style={{
+						transform: isDragOver ? 'scale(1.1)' : 'scale(1)',
+						transition: 'transform 0.2s ease',
+						borderColor: isDragOver ? '#007bff' : '#ccc',
+						boxShadow: isDragOver ? '0 0 8px #007bff' : 'none',
+					}}
+				>
+					{isEditing ? (
+						<input
+							ref={inputRef}
+							defaultValue={node.title}
+							onBlur={(e) => onRename(node.id, e.target.value)}
+							onKeyDown={handleKeyDown}
+						/>
+					) : (
+						<div
+							draggable
+							onDragStart={handleDragStart}
+							onDragOver={(e) => {
+								e.stopPropagation();
+								handleDragOver(e, node.id);
+							}}
+							onDragLeave={(e) => {
+								e.stopPropagation();
+								handleDragLeave(e, node.id);
+							}}
+						>
+							{node.title}
+						</div>
+					)}
+					{node.children?.length > 0 && (
+						<ul>
+							{node.children.map(child => (
+								<TreeNode
+									key={child.id}
+									node={child}
+									onContextMenu={onContextMenu}
+									onDrop={onDrop}
+									editingId={editingId}
+									setEditingId={setEditingId}
+									onRename={onRename}
+									dragOverId={dragOverId}
+									setDragOverId={setDragOverId}
+								/>
+							))}
+						</ul>
+					)}
+				</li>
+			);
+		};
 
-        const App = () => {
-            const [tree, setTree] = useState(initialData);
-            const [editingId, setEditingId] = useState(null);
-            const [dragOverId, setDragOverId] = useState(null);
+		const App = () => {
+			const [tree, setTree] = useState(initialData);
+			const [editingId, setEditingId] = useState(null);
+			const [dragOverId, setDragOverId] = useState(null);
 
-            const rightClickNodeId = useRef(null);
+			const rightClickNodeId = useRef(null);
 
-            const findNodeById = (nodes, id) => {
-                for (const node of nodes) {
-                    if (node.id === id) return node;
-                    const found = findNodeById(node.children, id);
-                    if (found) return found;
-                }
-                return null;
-            };
+			const findNodeById = (nodes, id) => {
+				for (const node of nodes) {
+					if (node.id === id) return node;
+					const found = findNodeById(node.children, id);
+					if (found) return found;
+				}
+				return null;
+			};
 
-            const removeNodeById = (nodes, id) => {
-                return nodes.filter(node => {
-                    if (node.id === id) return false;
-                    node.children = removeNodeById(node.children, id);
-                    return true;
-                });
-            };
+			const removeNodeById = (nodes, id) => {
+				return nodes.filter(node => {
+					if (node.id === id) return false;
+					node.children = removeNodeById(node.children, id);
+					return true;
+				});
+			};
 
-            const isDescendant = (parent, maybeChild) => {
-                if (!parent || !maybeChild) return false;
-                if (parent.id === maybeChild.id) return true;
-                return parent.children?.some(child => isDescendant(child, maybeChild));
-            };
+			const isDescendant = (parent, maybeChild) => {
+				if (!parent || !maybeChild) return false;
+				if (parent.id === maybeChild.id) return true;
+				return parent.children?.some(child => isDescendant(child, maybeChild));
+			};
 
-            const handleDrop = (draggedId, targetId) => {
-                if (draggedId === targetId) return;
+			const handleDrop = (draggedId, targetId) => {
+				if (draggedId === targetId) return;
 
-                const cloneNode = (node) => ({
-                    id: node.id,
-                    title: node.title,
-                    children: node.children.map(cloneNode),
-                });
+				const cloneNode = (node) => ({
+					id: node.id,
+					title: node.title,
+					children: node.children.map(cloneNode),
+				});
 
-                const originalNode = findNodeById(tree, draggedId);
-                const copiedNode = cloneNode(originalNode);
+				const originalNode = findNodeById(tree, draggedId);
+				const copiedNode = cloneNode(originalNode);
 
-                const newTree = removeNodeById(tree, draggedId);
-                const targetNode = findNodeById(newTree, targetId);
+				const newTree = removeNodeById(tree, draggedId);
+				const targetNode = findNodeById(newTree, targetId);
 
-                if (!isDescendant(targetNode, copiedNode) || true) { // ✅ 判断方向修正
-                    targetNode.children.push(copiedNode);
-                    setTree([...newTree]);
-                }
-            };
+				if (!isDescendant(targetNode, copiedNode) || true) { // ✅ 判断方向修正
+					targetNode.children.push(copiedNode);
+					setTree([...newTree]);
+				}
+			};
 
 
-            const handleContextMenu = (e, nodeId) => {
-                e.preventDefault();
-                rightClickNodeId.current = nodeId;
-                const menu = document.getElementById('context-menu');
-                menu.style.left = `${e.pageX}px`;
-                menu.style.top = `${e.pageY}px`;
-                menu.style.display = 'block';
-            };
+			const handleContextMenu = (e, nodeId) => {
+				e.preventDefault();
+				rightClickNodeId.current = nodeId;
+				const menu = document.getElementById('context-menu');
+				menu.style.left = `${e.pageX}px`;
+				menu.style.top = `${e.pageY}px`;
+				menu.style.display = 'block';
+			};
 
-            const addNode = () => {
-                const id = rightClickNodeId.current;
-                const newTree = [...tree];
-                const target = findNodeById(newTree, id);
-                target.children.push({ id: Date.now().toString(), title: '新节点', children: [] });
-                setTree(newTree);
-                hideMenu();
-            };
+			const addNode = () => {
+				const id = rightClickNodeId.current;
+				const newTree = [...tree];
+				const target = findNodeById(newTree, id);
+				target.children.push({ id: Date.now().toString(), title: '新节点', children: [] });
+				setTree(newTree);
+				hideMenu();
+			};
 
-            const deleteNode = () => {
-                const id = rightClickNodeId.current;
-                setTree(removeNodeById(tree, id));
-                hideMenu();
-            };
+			const deleteNode = () => {
+				const id = rightClickNodeId.current;
+				setTree(removeNodeById(tree, id));
+				hideMenu();
+			};
 
-            const renameNode = () => {
-                setEditingId(rightClickNodeId.current);
-                hideMenu();
-            };
+			const renameNode = () => {
+				setEditingId(rightClickNodeId.current);
+				hideMenu();
+			};
 
-            const onRename = (id, newTitle) => {
-                const update = (nodes) => {
-                    for (const node of nodes) {
-                        if (node.id === id) {
-                            node.title = newTitle.trim() || node.title;
-                        } else {
-                            node.children = update(node.children);
-                        }
-                    }
-                    return nodes;
-                };
-                setTree(update([...tree]));
-                setEditingId(null);
-            };
+			const onRename = (id, newTitle) => {
+				const update = (nodes) => {
+					for (const node of nodes) {
+						if (node.id === id) {
+							node.title = newTitle.trim() || node.title;
+						} else {
+							node.children = update(node.children);
+						}
+					}
+					return nodes;
+				};
+				setTree(update([...tree]));
+				setEditingId(null);
+			};
 
-            const hideMenu = () => {
-                const menu = document.getElementById('context-menu');
-                menu.style.display = 'none';
-            };
+			const hideMenu = () => {
+				const menu = document.getElementById('context-menu');
+				menu.style.display = 'none';
+			};
 
-            useEffect(() => {
-                document.addEventListener('click', hideMenu);
-                return () => document.removeEventListener('click', hideMenu);
-            }, []);
+			useEffect(() => {
+				document.addEventListener('click', hideMenu);
+				return () => document.removeEventListener('click', hideMenu);
+			}, []);
 
-            // 绑定右键菜单方法给全局 HTML 调用
-            window.menuActions = { addNode, deleteNode, renameNode };
+			// 绑定右键菜单方法给全局 HTML 调用
+			window.menuActions = { addNode, deleteNode, renameNode };
 
-            return (
-                <ul>
-                    {tree.map(node => (
-                        <TreeNode
-                            key={node.id}
-                            node={node}
-                            onContextMenu={handleContextMenu}
-                            onDrop={handleDrop}
-                            editingId={editingId}
-                            setEditingId={setEditingId}
-                            onRename={onRename}
-                            dragOverId={dragOverId}
-                            setDragOverId={setDragOverId}
-                        />
-                    ))}
-                </ul>
-            );
-        };
+			return (
+				<ul>
+					{tree.map(node => (
+						<TreeNode
+							key={node.id}
+							node={node}
+							onContextMenu={handleContextMenu}
+							onDrop={handleDrop}
+							editingId={editingId}
+							setEditingId={setEditingId}
+							onRename={onRename}
+							dragOverId={dragOverId}
+							setDragOverId={setDragOverId}
+						/>
+					))}
+				</ul>
+			);
+		};
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+		const root = ReactDOM.createRoot(document.getElementById('root'));
+		root.render(<App />);
+	</script>
 </body>
 
 </html>
