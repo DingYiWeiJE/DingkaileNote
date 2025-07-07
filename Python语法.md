@@ -242,7 +242,9 @@ pipreqs ./ --encoding=utf8 --force
 
 # Flask框架
 
-## ✅ 步骤 1：创建基本目录结构
+## 项目初始化
+
+### ✅ 步骤 1：创建基本目录结构
 
 在你的空文件夹中创建如下结构：
 
@@ -275,7 +277,7 @@ arduino
 
 ------
 
-## ✅ 步骤 2：创建虚拟环境并安装依赖
+### ✅ 步骤 2：创建虚拟环境并安装依赖
 
 ```
 bash
@@ -299,9 +301,9 @@ pip freeze > requirements.txt
 
 ------
 
-## ✅ 步骤 3：配置 Flask 应用
+### ✅ 步骤 3：配置 Flask 应用
 
-### `config.py`
+#### `config.py`
 
 ```
 python
@@ -317,7 +319,7 @@ class Config:
 
 ------
 
-### `app/__init__.py`
+#### `app/__init__.py`
 
 ```
 python
@@ -345,7 +347,7 @@ def create_app():
 
 ------
 
-### `app/models.py`
+#### `app/models.py`
 
 ```
 python
@@ -361,7 +363,7 @@ class User(db.Model):
 
 ------
 
-### `manage.py`
+#### `manage.py`
 
 ```
 python
@@ -378,7 +380,7 @@ if __name__ == '__main__':
 
 ------
 
-## ✅ 步骤 4：初始化数据库迁移系统
+### ✅ 步骤 4：初始化数据库迁移系统
 
 现在开始做数据库迁移操作：
 
@@ -398,7 +400,7 @@ flask db upgrade
 - `migrations/` 文件夹被自动创建
 - `app.db` 数据库文件被创建，包含一个 `user` 表
 
-## ✅ 步骤 1：安装 PostgreSQL 驱动
+### ✅ 步骤 1：安装 PostgreSQL 驱动
 
 PostgreSQL 需要额外安装 `psycopg2`：
 
@@ -412,7 +414,7 @@ pip install psycopg2-binary
 
 ------
 
-## ✅ 步骤 2：修改数据库配置
+### ✅ 步骤 2：修改数据库配置
 
 打开 `config.py`，把原来的 SQLite URI 改成 PostgreSQL 连接字符串：
 
@@ -428,7 +430,7 @@ class Config:
 
 ------
 
-## ✅ 步骤 3：确认 PostgreSQL 数据库已启动并可连接
+### ✅ 步骤 3：确认 PostgreSQL 数据库已启动并可连接
 
 请确保你在本地已经启动了 PostgreSQL，且这个用户和数据库都能访问：
 
@@ -446,7 +448,7 @@ psql -h localhost -U postgres -d postgres
 
 ------
 
-## ✅ 步骤 4：重新初始化数据库迁移（如果上一步你已经完成）
+### ✅ 步骤 4：重新初始化数据库迁移（如果上一步你已经完成）
 
 你现在可以继续运行迁移命令，把模型同步到 PostgreSQL 中：
 
@@ -469,6 +471,43 @@ flask db upgrade
 ------
 
 完成后你就可以打开 PostgreSQL 数据库，看到 `user` 表已经被创建。
+
+
+
+## 获取接口参数
+
+### 获取query
+
+```python
+from flask import request
+
+course_id = request.args.get('course_id')
+```
+
+
+
+### 获取body（json）
+
+```
+json_data = request.get_json()
+dingkaile = json_data.get('dingkaile', 'defaultvalue')
+```
+
+
+
+### 获取form
+
+```
+input_text = request.form.get('input', '')
+```
+
+#### 判断请求类型是否为form形式
+
+```
+    if not request.content_type.startswith('application/x-www-form-urlencoded') and \
+       not request.content_type.startswith('multipart/form-data'):
+        return _error_response('Unsupported Content-Type', 415)
+```
 
 
 
