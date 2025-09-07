@@ -331,11 +331,11 @@ optimization: {
 },
 ```
 
-priority 是优先级，如果它命中了vendor规则，还命中了common规则，那么就看谁的优先级高就依谁
+**priority** 是优先级，如果它命中了vendor规则，还命中了common规则，那么就看谁的优先级高就依谁
 
-minChunks是被复用过多少次，通常node_modules是这只只要命中一次就抽离
+**minChunks**是被复用过多少次，通常node_modules是这只只要命中一次就抽离
 
-minSize是公共模块文件大小；如果文件很小的话，就没必要单独抽离出来了，这个时候把它“复制粘贴”到main.js中更划算； 这样可以避免一次请求；通常设置3kb
+**minSize**是公共模块文件大小；如果文件很小的话，就没必要单独抽离出来了，这个时候把它“复制粘贴”到main.js中更划算； 这样可以避免一次请求；通常设置3kb
 
 ```js
  plugins: [
@@ -412,3 +412,89 @@ WebPack 会根据代码的引入方式生成动态文件。动态导入后，Web
 4. **`customize`**
    - **作用**：允许你自定义 `babel-loader` 的行为。你可以传入自定义的回调函数来定制转换过程中的某些环节。
    - **适用场景**：当你需要在构建过程中做一些特殊的定制化处理（比如增加自定义插件）时，可以使用它。
+
+
+
+# 忽略无用文件
+
+Webpack 默认会把代码里出现的 `require()` 或 `import` 全部打包，但有时候我们并不想要所有文件，这时就可以用 IgnorePlugin 告诉 Webpack：这部分内容你忽略，不要打包
+
+**`resourceRegExp`**：匹配**要忽略的文件名或路径**
+
+**`contextRegExp`**：匹配**在哪个目录下的这个文件**
+
+两个条件必须**同时匹配**才会忽略
+
+忽略后需要**手动引入必要的文件**
+
+```js
+const webpack = require('webpack');
+
+module.exports = {
+  plugins: [
+    // 忽略 moment 所有 locale
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /moment$/
+    }),
+
+    // 忽略 dayjs 所有 locale
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /dayjs$/
+    }),
+
+    // 忽略 highlight.js 所有语言包
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/languages$/,
+      contextRegExp: /highlight\.js$/
+    }),
+  ]
+};
+
+```
+
+```js
+const webpack = require('webpack');
+
+const ignoreConfigs = [
+  { resource: /^\.\/locale$/, context: /moment$/ },
+  { resource: /^\.\/locale$/, context: /dayjs$/ },
+  { resource: /^\.\/languages$/, context: /highlight\.js$/ }
+];
+
+module.exports = {
+  plugins: [
+    ...ignoreConfigs.map(cfg => new webpack.IgnorePlugin({
+      resourceRegExp: cfg.resource,
+      contextRegExp: cfg.context
+    }))
+  ]
+};
+
+```
+
+```js
+const webpack = require('webpack');
+
+module.exports = {
+  plugins: [
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/(locale|languages)$/,
+      contextRegExp: /(moment|dayjs|highlight\.js)$/
+    })
+  ]
+};
+
+```
+
+```js
+import moment from 'moment';
+import 'moment/locale/zh-cn';  // 因为这里已经被忽略掉了，所以需要手动引入，后续才能继续使用
+
+moment.locale('zh-cn');
+
+```
+
+
+
