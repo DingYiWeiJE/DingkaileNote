@@ -41,7 +41,7 @@ new webpack.DefinePlugin({
 
 
 
-# 启动本地开发服务
+# webpack-dev-server启动本地开发服务
 
 ```
 npm i -D webpack-dev-server
@@ -98,7 +98,7 @@ rules: [
 
 # 配置样式
 
-## 添加前缀
+## postcss-loader添加前缀
 
 ```
 npm i -D postcss-loader autoprefixer postcss
@@ -129,7 +129,7 @@ div{
 
 
 
-## 抽离css文件
+## 抽离css文件mini-css-extract-plugin
 
 **注意，在module/rules之下配置了之后，还要在plugin里面引用；**
 
@@ -166,7 +166,7 @@ plugins: [
 
 # 处理图片
 
-## dev环境
+## dev环境file-loader
 
 ```js
 {
@@ -175,7 +175,7 @@ plugins: [
 }
 ```
 
-## prod环境
+## prod环境url-loader
 
 把小的文件直接转换成base64； 可以减少http请求
 
@@ -251,7 +251,7 @@ new HtmlWebpackPlugin({
 
 
 
-# 自动清理输出文件目录
+# clean-webpack-plugin自动清理
 
 ```
 npm i -D clean-webpack-plugin
@@ -383,7 +383,7 @@ button.addEventListener('click', () => {
 });
 ```
 
-WebPack 会根据代码的引入方式生成动态文件。动态导入后，WebPack 会创建一个新的 bundle，并在需要时进行加载
+WebPack 会根据代码的引入方式生成动态文件。动态导入后，Webpack 会创建一个新的 bundle，并在需要时进行加载
 
 
 
@@ -417,7 +417,7 @@ WebPack 会根据代码的引入方式生成动态文件。动态导入后，Web
 
 # 忽略无用文件
 
-Webpack 默认会把代码里出现的 `require()` 或 `import` 全部打包，但有时候我们并不想要所有文件，这时就可以用 IgnorePlugin 告诉 Webpack：这部分内容你忽略，不要打包
+Webpack 默认会把代码里出现的 `require()` 或 `import` 全部打包，但有时候我们并不想要所有文件，这时就可以用 Ignore Plugin 告诉 Webpack：这部分内容你忽略，不要打包
 
 **`resourceRegExp`**：匹配**要忽略的文件名或路径**
 
