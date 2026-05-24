@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm view:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(cd D:/code/hg-front && docker build -t hg-front:latest . 2>&1)",
+      "Bash(docker save:*)",
+      "Bash(scp D:/code/hg-front/hg-front.tar root@115.191.79.32:/root/ 2>&1)"
+    ]
+  }
+}

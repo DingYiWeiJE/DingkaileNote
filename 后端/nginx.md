@@ -6,3 +6,9 @@
 
 
 
+# 查看Nginx配置文件
+
+```
+ls /etc/nginx/conf.d/
+```
+
